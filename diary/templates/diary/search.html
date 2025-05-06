@@ -1,0 +1,72 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block title %}Поиск{% endblock %}
+
+<!--    КОНТЕНТ -->
+{% block content %}
+<section class="my-post-detail">
+    <div class="container">
+        <div class="row">
+            <!--    ЭТО ЛЕВАЯ КОЛОНКА КОНТЕНТА ПОСТА -->
+            <div class="col-lg-12">
+                <!--    ЭТО ХЛЕБНЫЕ КРОШКИ -->
+                <nav aria-label="breadcrumb" class="my-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active" aria-current="page">Поиск</li>
+                    </ol>
+                </nav>
+                <p class="lead">Найдено записей: {{ count }}</p>
+                {% for result in results %}
+                <a href="{% url 'diary:detail_post' result.pk %}"><h2>{{ result.title }}</h2></a>
+                <p>{{ result.content|truncatechars:250|safe }}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+<!--    ПАГИНАЦИЯ -->
+{% block pagination %}
+<section class="my-pagination">
+    <nav aria-label="Paginate me">
+        <ul class="pagination justify-content-center">
+            {% if results.has_previous %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page={{ results.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                   tabindex="-1">Предыдущая страница</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Предыдущая страница</a>
+            </li>
+            {% endif %}
+
+            {% for i in results.paginator.page_range %}
+            {% if i == results.number %}
+            <li class="page-item active">
+                <a class="page-link" href="#">{{ i }}</a> <!-- Активная страница не должна быть ссылкой -->
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if results.has_next %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page={{ results.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Следующая страница</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#">Следующая страница</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</section>
+{% endblock %}

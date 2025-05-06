@@ -1,0 +1,23 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block title %}Создание новой записи{% endblock %}
+
+<!--    КОНТЕНТ -->
+{% block content %}
+<section class="create-post">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <h1>Создание новой записи</h1>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">Создать запись</button>
+                    <a href="{% url 'diary:list_posts' %}" class="btn btn-secondary">Отмена</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

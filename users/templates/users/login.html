@@ -1,0 +1,53 @@
+{% extends 'diary/base.html' %}
+{% load static %}
+{% block title %}Приветственная страница{% endblock %}
+
+{% block content %}
+<style>
+    h1 {
+    font-family: 'Roboto';
+}
+</style>
+<section class="bg-light py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8 col-sm-10">
+                <h1 class="mb-4 text-center"><i>Добро пожаловать!</i></h1>
+                <!-- Добавляем картинку -->
+                <p class="text-center mb-0">
+                    <img src="{% static 'media/welcome.jpg' %}" alt="Добро пожаловать"
+                         style="width: 100px; height: auto;"/>
+                </p>
+                <nav aria-label="breadcrumb" class="my-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active" aria-current="page">Форма авторизации</li>
+                    </ol>
+                </nav>
+
+                <div class="card border-1 shadow-sm">
+                    <div class="card-body">
+                        <p class="text-center">Для входа введите e-mail и пароль.</p>
+                        <form method="post" action="{% url 'users:login' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                {{ form.username }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form.password }}
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <button type="submit" class="btn btn-primary">Войти</button>
+                                <a href="{% url 'users:reset_password' %}" class="small">Забыли пароль?</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <p>Новый пользователь? <a href="{% url 'users:registration' %}">Зарегистрируйтесь сейчас!</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

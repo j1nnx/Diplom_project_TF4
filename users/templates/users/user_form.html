@@ -1,0 +1,132 @@
+{% extends 'diary/base.html' %}
+{% load static %}
+{% block title %}Профиль пользователя{% endblock %}
+
+{% block content %}
+<style>
+    .profile-card {
+    padding: 20px; /* Увеличенный внутренний отступ */
+}
+    @media (min-width: 768px) { /* Экран >= md (средние экраны и выше) */
+    .avatar {
+        margin-right: 40px; /* Еще большее увеличение отступа для средних и больших экранов */
+    }
+}
+    .form-group {
+    margin-bottom: 24px; /* Увеличенный нижний отступ */
+}
+</style>
+<section class="my-profile-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active" aria-current="page">Профиль пользователя</li>
+                    </ol>
+                </nav>
+
+                <div class="card profile-card">
+                    <div class="card-body d-flex flex-column flex-md-row align-items-md-center">
+                        <!-- Аватар -->
+                        <div class="avatar mb-3 mb-md-0 mr-md-3 text-center text-md-left">
+                            {% if user.avatar %}
+                                <img src="{{ user.avatar.url }}" alt="Аватар пользователя"
+                                 style="max-width: 200px; max-height: 250px; object-fit: cover;" id="avatar-image">
+                            {% else %}
+                                <p>Фото отсутствует</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Информация о пользователе -->
+                        <div class="profile-info">
+                            <h2 class="h4 mb-2">{{ user.username }}</h2>
+                            <p class="mb-0">{{ user.email }}</p>
+                            <small class="text-muted">Дата регистрации: {{ user.date_joined|date:"d M Y" }}</small>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        <div class="form-group row">
+                            <label for="username" class="col-sm-3 col-form-label">Ф.И.О</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="username" name="username" value="{{ user.username }}"
+                                       class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="city" class="col-sm-3 col-form-label">Город</label>
+                            <div class="col-sm-9">
+                                <input type="city" id="city" name="city" value="{{ user.city }}"
+                                       class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="email" class="col-sm-3 col-form-label">Электронная почта</label>
+                            <div class="col-sm-9">
+                                <input type="email" id="email" name="email" value="{{ user.email }}"
+                                       class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="phone" class="col-sm-3 col-form-label">Мобильный телефон</label>
+                            <div class="col-sm-9">
+                                <input type="phone" id="phone" name="phone" value="{{ user.phone }}"
+                                       class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-9">
+                                <input type="file" id="avatar-input" name="avatar" class="form-control-file d-none"
+                                       accept="image/*">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="offset-sm-3 col-sm-9">
+                                <button type="submit" class="btn btn-primary">Сохранить</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Находим элементы
+        const avatarImage = document.getElementById('avatar-image');
+        const avatarInput = document.getElementById('avatar-input');
+
+        // Обработчик клика по аватару
+        avatarImage.addEventListener('click', function() {
+            avatarInput.click(); // Активируем скрытое окно выбора файла
+        });
+
+        // Обработка загрузки нового изображения
+        avatarInput.addEventListener('change', function(event) {
+            if (event.target.files.length > 0) {
+                const file = event.target.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    avatarImage.src = e.target.result; // Обновляем аватар
+                };
+
+                reader.readAsDataURL(file); // Преобразуем файл в Data URL
+            }
+        });
+    });
+</script>
+
+{% endblock %}

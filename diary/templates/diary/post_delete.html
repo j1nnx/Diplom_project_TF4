@@ -1,0 +1,45 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block title %}Главная страница моего дневника{% endblock %}
+
+<!--    КОНТЕНТ -->
+{% block content %}
+<section class="post-detail">
+    <div class="container">
+        <div class="row">
+            <!--    ЭТО ЛЕВАЯ КОЛОНКА КОНТЕНТА ПОСТА -->
+            <div class="col-lg-8">
+                <!--    ЭТО ХЛЕБНЫЕ КРОШКИ -->
+                <nav aria-label="breadcrumb" class="my-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
+                    </ol>
+                </nav>
+                <!--    ЭТО ТЕЛО ПОСТА -->
+                <img class="img-fluid rounded " src="{{ post.image.url }}" alt="">
+                <hr>
+                <p class="lead">
+                    {{ post.content|safe }}
+                </p>
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <div class="lead">Автор: {{post.author}}</div>
+                    <div>Опубликовано: {{post.created_at}}</div>
+                </div>
+                <hr>
+
+                <!-- Форма удаления поста -->
+                <form action="{% url 'diary:delete_post' post.pk %}" method="POST" class="mt-4">
+                    {% csrf_token %}
+                    <div class="alert alert-warning" role="alert">
+                        Вы уверены, что хотите удалить эту статью?
+                    </div>
+                    <button type="submit" class="btn btn-danger">Удалить пост</button>
+                    <a href="{% url 'diary:list_posts' %}" class="btn btn-secondary">Отменить</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
